@@ -1,17 +1,48 @@
 var Vue = require('vue')
 var VueRouter = require('vue-router')
-var router = new VueRouter()
+
+// Telling Vue to use the router
+Vue.use(VueRouter)
+// Telling Vue to use the vue-resource
+Vue.use(require('vue-resource'))
+
+var app = Vue.extend({
+  components: {
+    'app-header': function(resolve) {
+      require(['./views/layouts/header'], resolve)
+    },
+    'app-footer': function(resolve) {
+      require(['./views/layouts/footer'], resolve)
+    }
+  }
+});
+
+// Initializing the router with options
+var router = new VueRouter({
+  history: false
+});
 
 router.map({
+  '*': {
+    component: {
+      template: 
+        "<div>" + 
+          "<h1>Hello VueJS</h1>" + 
+        "</div>"
+    }
+  },
   '/users': {
     component: require('./views/users')
+  },
+  '/weather': {
+    component: require('./views/weather')
+  },
+  '/signin': {
+    component: require('./views/signin')
+  },
+  '/signup': {
+    component: require('./views/signup')
   }
 })
 
-router.redirect({
-  '*': '/users'
-})
-
-const App = Vue.extend(require('./views/layouts/app.js'))
-
-router.start(App, '#app')
+router.start(app,"#app")

@@ -1,0 +1,39 @@
+<div class="weather">
+  <!-- <img v-attr:src="data_weather.weather[1].icon"> -->
+  <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <td>Temperature</td>
+          <td>{{ data_weather.main.temp_min }} - {{ data_weather.main.temp_max }}</td>
+        </tr>
+        <tr>
+          <td>Wind</td>
+          <td>{{ data_weather.wind.speed }} m/s</td>
+        </tr>
+        <tr>
+          <td>Cloudiness</td>
+          <td>{{ data_weather.clouds.all }}</td>
+        </tr>
+        <tr>
+          <td>Pressure</td>
+          <td>{{ data_weather.main.pressure }}</td>
+        </tr>
+        <tr>
+          <td>Humidity</td>
+          <td>{{ data_weather.main.humidity}} %</td>
+        </tr>
+        <tr>
+          <td>Sunrise</td>
+          <td>{{ data_weather.sys.sunrise }}</td>
+        </tr>
+        <tr>
+          <td>Sunset</td>
+          <td>{{ data_weather.sys.sunset }}</td>
+        </tr>
+        <tr>
+          <td>Geo Coords</td>
+          <td>[{{ data_weather.coord.lon }},{{ data_weather.coord.lat }}]</td>
+        </tr>
+      </table>
+    </div>
+</div>

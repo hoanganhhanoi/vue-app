@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <title>VueJS</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
   <div class="app" id="app">
+    <app-header></app-header>
+    <router-view></router-view>
+    <app-footer></app-footer>
   </div>
+  <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript" src="build/build.js"></script>
 </body>
 </html>
