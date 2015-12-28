@@ -13711,7 +13711,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"weather\">\n  <!-- <img v-attr:src=\"data_weather.weather[1].icon\"> -->\n  <div class=\"table-responsive\">\n      <table class=\"table table-bordered table-striped\">\n        <tr>\n          <td>Temperature</td>\n          <td>{{ data_weather.main.temp_min }} - {{ data_weather.main.temp_max }}</td>\n        </tr>\n        <tr>\n          <td>Wind</td>\n          <td>{{ data_weather.wind.speed }} m/s</td>\n        </tr>\n        <tr>\n          <td>Cloudiness</td>\n          <td>{{ data_weather.clouds.all }}</td>\n        </tr>\n        <tr>\n          <td>Pressure</td>\n          <td>{{ data_weather.main.pressure }}</td>\n        </tr>\n        <tr>\n          <td>Humidity</td>\n          <td>{{ data_weather.main.humidity}} %</td>\n        </tr>\n        <tr>\n          <td>Sunrise</td>\n          <td>{{ data_weather.sys.sunrise }}</td>\n        </tr>\n        <tr>\n          <td>Sunset</td>\n          <td>{{ data_weather.sys.sunset }}</td>\n        </tr>\n        <tr>\n          <td>Geo Coords</td>\n          <td>[{{ data_weather.coord.lon }},{{ data_weather.coord.lat }}]</td>\n        </tr>\n      </table>\n    </div>\n</div>";
+	module.exports = "<div class=\"weather\">\n  <img src=\"{{ data_weather.weather[1].icon }}\">\n  <div class=\"table-responsive\">\n      <table class=\"table table-bordered table-striped\">\n        <tr>\n          <td>Temperature</td>\n          <td>{{ data_weather.main.temp_min }} - {{ data_weather.main.temp_max }}</td>\n        </tr>\n        <tr>\n          <td>Wind</td>\n          <td>{{ data_weather.wind.speed }} m/s</td>\n        </tr>\n        <tr>\n          <td>Cloudiness</td>\n          <td>{{ data_weather.clouds.all }}</td>\n        </tr>\n        <tr>\n          <td>Pressure</td>\n          <td>{{ data_weather.main.pressure }}</td>\n        </tr>\n        <tr>\n          <td>Humidity</td>\n          <td>{{ data_weather.main.humidity}} %</td>\n        </tr>\n        <tr>\n          <td>Sunrise</td>\n          <td>{{ data_weather.sys.sunrise }}</td>\n        </tr>\n        <tr>\n          <td>Sunset</td>\n          <td>{{ data_weather.sys.sunset }}</td>\n        </tr>\n        <tr>\n          <td>Geo Coords</td>\n          <td>[{{ data_weather.coord.lon }},{{ data_weather.coord.lat }}]</td>\n        </tr>\n      </table>\n    </div>\n</div>";
 
 /***/ },
 /* 28 */
@@ -13720,14 +13720,18 @@
 	
 	module.exports = {
 	  template: __webpack_require__(29),
-	  
+	  methods: {
+	    change: function(event) {
+	      console.log(this.$route.router.go("/signup"));
+	    }
+	  }
 	}
 
 /***/ },
 /* 29 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <form role=\"form\">\n            <fieldset>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"E-mail\" name=\"email\" type=\"email\" autofocus>\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"Password\" name=\"password\" type=\"password\" value=\"\">\n                </div>\n                <div class=\"checkbox\">\n                    <label>\n                        <input name=\"remember\" type=\"checkbox\" value=\"Remember Me\">Remember Me\n                    </label>\n                </div>\n                <!-- Change this to a button or input when using this as a form -->\n                <a href=\"index.html\" class=\"btn btn-lg btn-primary btn-block\">Sign In</a>\n            </fieldset>\n        </form>\n    </div>\n</div>";
+	module.exports = "<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <form role=\"form\">\n            <fieldset>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"E-mail\" name=\"email\" type=\"email\" autofocus>\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"Password\" name=\"password\" type=\"password\" value=\"\">\n                </div>\n                <div class=\"checkbox\">\n                    <label>\n                        <input name=\"remember\" type=\"checkbox\" value=\"Remember Me\">Remember Me\n                    </label>\n                </div>\n                <!-- Change this to a button or input when using this as a form -->\n                <button class=\"btn btn-lg btn-primary btn-block\" v-on:click=\"change\">Sign In</button>\n            </fieldset>\n        </form>\n    </div>\n</div>";
 
 /***/ },
 /* 30 */
@@ -13735,6 +13739,7 @@
 
 	
 	module.exports = {
+	  url: "/signup",
 	  template: __webpack_require__(31)
 	}
 

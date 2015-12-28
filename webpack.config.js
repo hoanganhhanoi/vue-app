@@ -17,8 +17,7 @@ module.exports = {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.html$/, loader: "html" },
-      { test: /\.vue$/, loader: "vue-loader"},
-      { test: /\.png$/, loader:['url?limit=8192','img' ]}
+      { test: /\.vue$/, loader: "vue-loader"}
     ]
   }
 }
