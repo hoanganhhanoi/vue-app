@@ -27,9 +27,10 @@ router.map({
   '*': {
     component: {
       template: 
-        "<div>" + 
-          "<h1>Hello VueJS</h1>" + 
-        "</div>"
+        '<div>' + 
+          '<h1>Hello VueJS</h1>' +
+          '<a v-link="{ path: \'/signin\' }">Change State</a>' + 
+        '</div>'
     }
   },
   '/users': {
