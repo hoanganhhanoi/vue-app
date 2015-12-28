@@ -8,6 +8,12 @@
   },
   "author": "Hoang Anh Nguyen",
   "license": "ISC",
+  "scripts": {
+    "dev": "webpack-dev-server --inline --hot --quiet",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "web-server": "http-server -a 0.0.0.0 -p 8000",
+    "start": "npm run web-server"
+  },
   "devDependencies": {
     "babel-core": "^6.1.21",
     "babel-loader": "^6.1.0",
@@ -26,12 +32,16 @@
     "vue-loader": "^7.2.0",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0",
+    "imports-loader": "^0.6.5",
     "url-loader": "^0.5.7"
   },
   "dependencies": {
     "es6-promise": "^3.0.2",
     "vue": "^1.0.8",
     "vue-router": "^0.7.7",
-    "vue-resource": "^0.5.1"
+    "vue-resource": "^0.5.1",
+    "bootstrap": "^3.3.5",
+    "bootstrap-webpack": "0.0.4",
+    "jquery": "2.1.4"
   }
 }

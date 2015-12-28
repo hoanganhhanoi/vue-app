@@ -1,5 +1,5 @@
 <div class="weather">
-  <img src="{{ data_weather.weather[1].icon }}">
+  <img v-bind:src.sync="data_weather.weather[0].icon">
   <div class="table-responsive">
       <table class="table table-bordered table-striped">
         <tr>
