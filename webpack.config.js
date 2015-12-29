@@ -1,8 +1,9 @@
 module.exports = {
   entry: [
   "./app/index.js", 
-  "./app/views/layouts/header/index.js",
-  "./app/views/layouts/footer/index.js",
+  "./app/views/layouts/layout1/header/index.js",
+  "./app/views/layouts/layout1/footer/index.js",
+  "./app/views/layouts/layout1/index.js",
   "./app/views/users/index.js",
   "./app/views/weather/index.js",
   "./app/views/signin/index.js",

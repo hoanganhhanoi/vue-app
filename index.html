@@ -6,9 +6,7 @@
 </head>
 <body>
   <div class="app" id="app">
-    <app-header></app-header>
-    <router-view></router-view>
-    <app-footer></app-footer>
+    <component is="{{currentView}}" keep-alive></component>
   </div>
 
   <script type="text/javascript" src="build/build.js"></script>

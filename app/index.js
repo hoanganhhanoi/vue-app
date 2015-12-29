@@ -1,19 +1,29 @@
 require("bootstrap-webpack")
 var Vue = require('vue')
 var VueRouter = require('vue-router')
+var VueAsyncData = require('vue-async-data')
 
 // Telling Vue to use the router
 Vue.use(VueRouter)
 // Telling Vue to use the vue-resource
 Vue.use(require('vue-resource'))
+// Telling Vuw to use the vue-async-data
+Vue.use(require('vue-async-data'))
+
+Vue.component('home', {
+    template: '<div>home-template</div>'
+});
 
 var app = Vue.extend({
+  data: function(){
+    return {
+      currentView: 'layout1'
+    }
+  },
+  replace: true,
   components: {
-    'app-header': function(resolve) {
-      require(['./views/layouts/header'], resolve)
-    },
-    'app-footer': function(resolve) {
-      require(['./views/layouts/footer'], resolve)
+    'layout1': function(resolve) {
+      require(['./views/layouts/layout1'], resolve)
     }
   }
 });

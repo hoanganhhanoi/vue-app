@@ -45,12 +45,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(70);
-	__webpack_require__(124);
-	__webpack_require__(131);
-	__webpack_require__(116);
-	__webpack_require__(118);
-	__webpack_require__(120);
-	module.exports = __webpack_require__(122);
+	__webpack_require__(127);
+	__webpack_require__(134);
+	__webpack_require__(125);
+	__webpack_require__(117);
+	__webpack_require__(119);
+	__webpack_require__(121);
+	module.exports = __webpack_require__(123);
 
 
 /***/ },
@@ -129,20 +130,32 @@
 	__webpack_require__(71)
 	var Vue = __webpack_require__(94)
 	var VueRouter = __webpack_require__(96)
+	var VueAsyncData = __webpack_require__(97)
 
 	// Telling Vue to use the router
 	Vue.use(VueRouter)
 	// Telling Vue to use the vue-resource
+	Vue.use(__webpack_require__(98))
+	// Telling Vuw to use the vue-async-data
 	Vue.use(__webpack_require__(97))
 
+	Vue.component('home', {
+	    template: '<div>home-template</div>'
+	});
+
+	Vue.component('layout1', function(resolve) {
+	  !/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(125)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}())
+	});
+
 	var app = Vue.extend({
-	  components: {
-	    'app-header': function(resolve) {
-	      !/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(124)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}())
-	    },
-	    'app-footer': function(resolve) {
-	      !/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(131)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}())
+	  data: function(){
+	    return {
+	      currentView: 'layout1'
 	    }
+	  },
+	  replace: true,
+	  components: {
+	    'layout1': layout1
 	  }
 	});
 
@@ -162,16 +175,16 @@
 	    }
 	  },
 	  '/users': {
-	    component: __webpack_require__(116)
+	    component: __webpack_require__(117)
 	  },
 	  '/weather': {
-	    component: __webpack_require__(118)
+	    component: __webpack_require__(119)
 	  },
 	  '/signin': {
-	    component: __webpack_require__(120)
+	    component: __webpack_require__(121)
 	  },
 	  '/signup': {
-	    component: __webpack_require__(122)
+	    component: __webpack_require__(123)
 	  }
 	})
 
@@ -24024,18 +24037,95 @@
 /* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
+	(function () {
+	  var vue // lazy bind
+
+	  var asyncData = {
+	    created: function () {
+	      if (!vue) {
+	        console.warn('[vue-async-data] not installed!')
+	        return
+	      }
+	      if (this.$options.asyncData) {
+	        if (this._defineMeta) {
+	          // 0.12 compat
+	          this._defineMeta('$loadingAsyncData', true)
+	        } else {
+	          // ^1.0.0-alpha
+	          vue.util.defineReactive(this, '$loadingAsyncData', true)
+	        }
+	      }
+	    },
+	    compiled: function () {
+	      this.reloadAsyncData()
+	    },
+	    methods: {
+	      reloadAsyncData: function () {
+	        var load = this.$options.asyncData
+	        if (load) {
+	          var self = this
+	          var resolve = function (data) {
+	            if (data) {
+	              for (var key in data) {
+	                self.$set(key, data[key])
+	              }
+	            }
+	            self.$loadingAsyncData = false
+	            self.$emit('async-data')
+	          }
+	          var reject = function (reason) {
+	            var msg = '[vue] async data load failed'
+	            if (reason instanceof Error) {
+	              console.warn(msg)
+	              throw reason
+	            } else {
+	              console.warn(msg + ': ' + reason)
+	            }
+	          }
+	          this.$loadingAsyncData = true
+	          var res = load.call(this, resolve, reject)
+	          if (res && typeof res.then === 'function') {
+	            res.then(resolve, reject)
+	          }
+	        }
+	      }
+	    }
+	  }
+
+	  var api = {
+	    mixin: asyncData,
+	    install: function (Vue, options) {
+	      vue = Vue
+	      Vue.options = Vue.util.mergeOptions(Vue.options, asyncData)
+	    }
+	  }
+
+	  if(true) {
+	    module.exports = api
+	  } else if(typeof define === 'function' && define.amd) {
+	    define(function () { return api })
+	  } else if (typeof window !== 'undefined') {
+	    window.VueAsyncData = api
+	  }
+	})()
+
+
+/***/ },
+/* 98 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * Install plugin.
 	 */
 
 	function install(Vue) {
 
-	    var _ = __webpack_require__(98)(Vue);
+	    var _ = __webpack_require__(99)(Vue);
 
-	    Vue.url = __webpack_require__(99)(_);
-	    Vue.http = __webpack_require__(101)(_);
-	    Vue.resource = __webpack_require__(115)(_);
-	    Vue.promise = __webpack_require__(102)(_);
+	    Vue.url = __webpack_require__(100)(_);
+	    Vue.http = __webpack_require__(102)(_);
+	    Vue.resource = __webpack_require__(116)(_);
+	    Vue.promise = __webpack_require__(103)(_);
 
 	    Object.defineProperties(Vue.prototype, {
 
@@ -24068,7 +24158,7 @@
 
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports) {
 
 	/**
@@ -24174,14 +24264,14 @@
 
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Service for URL templating.
 	 */
 
-	var UrlTemplate = __webpack_require__(100);
+	var UrlTemplate = __webpack_require__(101);
 
 	module.exports = function (_) {
 
@@ -24343,7 +24433,7 @@
 
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports) {
 
 	/**
@@ -24499,7 +24589,7 @@
 
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24508,9 +24598,9 @@
 
 	module.exports = function (_) {
 
-	    var Promise = __webpack_require__(102)(_);
-	    var interceptor = __webpack_require__(104)(_);
-	    var defaultClient = __webpack_require__(105)(_);
+	    var Promise = __webpack_require__(103)(_);
+	    var interceptor = __webpack_require__(105)(_);
+	    var defaultClient = __webpack_require__(106)(_);
 	    var jsonType = {'Content-Type': 'application/json'};
 
 	    function Http(url, options) {
@@ -24571,13 +24661,13 @@
 	    };
 
 	    Http.interceptors = [
-	        __webpack_require__(107)(_),
 	        __webpack_require__(108)(_),
 	        __webpack_require__(109)(_),
-	        __webpack_require__(111)(_),
+	        __webpack_require__(110)(_),
 	        __webpack_require__(112)(_),
 	        __webpack_require__(113)(_),
-	        __webpack_require__(114)(_)
+	        __webpack_require__(114)(_),
+	        __webpack_require__(115)(_)
 	    ];
 
 	    Http.headers = {
@@ -24613,7 +24703,7 @@
 
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24622,7 +24712,7 @@
 
 	module.exports = function (_) {
 
-	    var Promise = window.Promise || __webpack_require__(103)(_);
+	    var Promise = window.Promise || __webpack_require__(104)(_);
 
 	    var Adapter = function (executor) {
 
@@ -24730,7 +24820,7 @@
 
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports) {
 
 	/**
@@ -24916,7 +25006,7 @@
 
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24925,7 +25015,7 @@
 
 	module.exports = function (_) {
 
-	    var Promise = __webpack_require__(102)(_);
+	    var Promise = __webpack_require__(103)(_);
 
 	    return function (handler, vm) {
 	        return function (client) {
@@ -24969,7 +25059,7 @@
 
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24978,7 +25068,7 @@
 
 	module.exports = function (_) {
 
-	    var xhrClient = __webpack_require__(106)(_);
+	    var xhrClient = __webpack_require__(107)(_);
 
 	    return function (request) {
 	        return (request.client || xhrClient)(request);
@@ -24988,7 +25078,7 @@
 
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24997,7 +25087,7 @@
 
 	module.exports = function (_) {
 
-	    var Promise = __webpack_require__(102)(_);
+	    var Promise = __webpack_require__(103)(_);
 
 	    return function (request) {
 	        return new Promise(function (resolve) {
@@ -25088,7 +25178,7 @@
 
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports) {
 
 	/**
@@ -25114,7 +25204,7 @@
 
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports) {
 
 	/**
@@ -25154,7 +25244,7 @@
 
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25163,7 +25253,7 @@
 
 	module.exports = function (_) {
 
-	    var jsonpClient = __webpack_require__(110)(_);
+	    var jsonpClient = __webpack_require__(111)(_);
 
 	    return {
 
@@ -25182,7 +25272,7 @@
 
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25191,7 +25281,7 @@
 
 	module.exports = function (_) {
 
-	    var Promise = __webpack_require__(102)(_);
+	    var Promise = __webpack_require__(103)(_);
 
 	    return function (request) {
 	        return new Promise(function (resolve) {
@@ -25239,7 +25329,7 @@
 
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports) {
 
 	/**
@@ -25266,7 +25356,7 @@
 
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports) {
 
 	/**
@@ -25310,7 +25400,7 @@
 
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports) {
 
 	/**
@@ -25344,7 +25434,7 @@
 
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25354,7 +25444,7 @@
 	module.exports = function (_) {
 
 	    var originUrl = _.url.parse(location.href);
-	    var xdrClient = __webpack_require__(110)(_);
+	    var xdrClient = __webpack_require__(111)(_);
 	    var xhrCors = 'withCredentials' in new XMLHttpRequest();
 
 	    return {
@@ -25390,7 +25480,7 @@
 
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports) {
 
 	/**
@@ -25507,12 +25597,12 @@
 
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	module.exports = {
-	  template: __webpack_require__(117),
+	  template: __webpack_require__(118),
 	  replace: true,
 	  data: function () {
 	    return {
@@ -25522,32 +25612,32 @@
 	}
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"view\">\n  {{msg}}\n</div>";
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  template: __webpack_require__(119),
+	  template: __webpack_require__(120),
 	  replace: true,
 	  data: function() {
 	    return {
-	      data_weather: Object
+	      data_weather: {}
 	    }
 	  },
-	  ready: function() {
+	  asyncData: function(resolve, reject) {
 	      this.$http
 	      .get('http://api.openweathermap.org/data/2.5/weather?q=hanoi&appid=2de143494c0b295cca9337e1e96b00e0')
 	        .then(function(response) {
-	          this.data_weather = response.data
-	          for(i = 0; i < this.data_weather.weather.length; i++) {
-	            this.data_weather.weather[i].icon = "http://openweathermap.org/img/w/" + response.data.weather[i].icon + ".png"
-	            console.log(this.data_weather.weather[i].icon)
+	          for(i = 0; i < response.data.weather.length; i++) {
+	            response.data.weather[i].icon = "http://openweathermap.org/img/w/" + response.data.weather[i].icon + ".png"
+	            console.log(response.data.weather[i].icon)
 	          }
+	          return (this.data_weather = response.data)
 	        })
 	  },
 	  filters: {
@@ -25561,18 +25651,18 @@
 
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"weather\">\n  <img v-bind:src.sync=\"data_weather.weather[0].icon\">\n  <div class=\"table-responsive\">\n      <table class=\"table table-bordered table-striped\">\n        <tr>\n          <td>Temperature</td>\n          <td>{{ data_weather.main.temp_min }} - {{ data_weather.main.temp_max }}</td>\n        </tr>\n        <tr>\n          <td>Wind</td>\n          <td>{{ data_weather.wind.speed }} m/s</td>\n        </tr>\n        <tr>\n          <td>Cloudiness</td>\n          <td>{{ data_weather.clouds.all }}</td>\n        </tr>\n        <tr>\n          <td>Pressure</td>\n          <td>{{ data_weather.main.pressure }}</td>\n        </tr>\n        <tr>\n          <td>Humidity</td>\n          <td>{{ data_weather.main.humidity}} %</td>\n        </tr>\n        <tr>\n          <td>Sunrise</td>\n          <td>{{ data_weather.sys.sunrise }}</td>\n        </tr>\n        <tr>\n          <td>Sunset</td>\n          <td>{{ data_weather.sys.sunset }}</td>\n        </tr>\n        <tr>\n          <td>Geo Coords</td>\n          <td>[{{ data_weather.coord.lon }},{{ data_weather.coord.lat }}]</td>\n        </tr>\n      </table>\n    </div>\n</div>";
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	module.exports = {
-	  template: __webpack_require__(121),
+	  template: __webpack_require__(122),
 	  methods: {
 	    change: function(event) {
 	      console.log(this.$route.router.go("/signup"));
@@ -25581,47 +25671,70 @@
 	}
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <form role=\"form\">\n            <fieldset>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"E-mail\" name=\"email\" type=\"email\" autofocus>\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"Password\" name=\"password\" type=\"password\" value=\"\">\n                </div>\n                <div class=\"checkbox\">\n                    <label>\n                        <input name=\"remember\" type=\"checkbox\" value=\"Remember Me\">Remember Me\n                    </label>\n                </div>\n                <!-- Change this to a button or input when using this as a form -->\n                <button class=\"btn btn-lg btn-primary btn-block\" v-on:click=\"change\">Sign In</button>\n            </fieldset>\n        </form>\n    </div>\n</div>";
 
 /***/ },
-/* 122 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	module.exports = {
 	  url: "/signup",
-	  template: __webpack_require__(123)
+	  template: __webpack_require__(124)
 	}
 
 /***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"container-fluid\">\n    <section class=\"container\">\n    <div class=\"container-page\">        \n      <div class=\"col-md-6\">\n        <h3 class=\"dark-grey\">Registration</h3>\n        \n        <div class=\"form-group col-lg-12\">\n          <label>Username</label>\n          <input type=\"\" name=\"\" class=\"form-control\" id=\"\" value=\"\">\n        </div>\n        \n        <div class=\"form-group col-lg-6\">\n          <label>Password</label>\n          <input type=\"password\" name=\"\" class=\"form-control\" id=\"\" value=\"\">\n        </div>\n        \n        <div class=\"form-group col-lg-6\">\n          <label>Repeat Password</label>\n          <input type=\"password\" name=\"\" class=\"form-control\" id=\"\" value=\"\">\n        </div>\n                \n        <div class=\"form-group col-lg-6\">\n          <label>Email Address</label>\n          <input type=\"\" name=\"\" class=\"form-control\" id=\"\" value=\"\">\n        </div>\n        \n        <div class=\"form-group col-lg-6\">\n          <label>Repeat Email Address</label>\n          <input type=\"\" name=\"\" class=\"form-control\" id=\"\" value=\"\">\n        </div>      \n      \n      </div>\n    \n      <div class=\"col-md-6\">\n        <h3 class=\"dark-grey\">Terms and Conditions</h3>\n        <p>\n          By clicking on \"Register\" you agree to The Company's' Terms and Conditions\n        </p>\n        <p>\n          While rare, prices are subject to change based on exchange rate fluctuations - \n          should such a fluctuation happen, we may request an additional payment. You have the option to request a full refund or to pay the new price.\n        </p>\n        <p>\n          Should there be an error in the description or pricing of a product, we will provide you with a full refund \n        </p>\n        <p>\n          Acceptance of an order by us is dependent on our suppliers ability to provide the product. \n        </p>\n        \n        <button type=\"submit\" class=\"btn btn-primary\">Register</button>\n      </div>\n    </div>\n  </section>\n</div>";
 
 /***/ },
-/* 124 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(125)
 	module.exports = {
-	  template: __webpack_require__(129)
+	  template: __webpack_require__(126),
+	  replace: true,
+	  components: {
+	    'app-header': function(resolve) {
+	      !/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(127)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}())
+	    },
+	    'app-footer': function(resolve) {
+	      !/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(134)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}())
+	    }
+	  }
 	}
 
 /***/ },
-/* 125 */
+/* 126 */
+/***/ function(module, exports) {
+
+	module.exports = "<app-header></app-header>\n<router-view></router-view>\n<app-footer></app-footer>";
+
+/***/ },
+/* 127 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(128)
+	module.exports = {
+	  template: __webpack_require__(132)
+	}
+
+/***/ },
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(126);
+	var content = __webpack_require__(129);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(128)(content, {});
+	var update = __webpack_require__(131)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25638,10 +25751,10 @@
 	}
 
 /***/ },
-/* 126 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(127)();
+	exports = module.exports = __webpack_require__(130)();
 	// imports
 
 
@@ -25652,7 +25765,7 @@
 
 
 /***/ },
-/* 127 */
+/* 130 */
 /***/ function(module, exports) {
 
 	/*
@@ -25708,7 +25821,7 @@
 
 
 /***/ },
-/* 128 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -25962,38 +26075,38 @@
 
 
 /***/ },
-/* 129 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <!-- Brand and toggle get grouped for better mobile display -->\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"#\">\n        <img src=\"" + __webpack_require__(130) + "\" style=\"height: 40px\"/>\n      </a>\n    </div>\n\n    <!-- Collect the nav links, forms, and other content for toggling -->\n    <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n      <ul class=\"nav navbar-nav\">\n        <li class=\"\"><a href=\"#\">Link <span class=\"sr-only\">(current)</span></a></li>\n        <li><a href=\"#\">Link</a></li>\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Action</a></li>\n            <li><a href=\"#\">Another action</a></li>\n            <li><a href=\"#\">Something else here</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">Separated link</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">One more separated link</a></li>\n          </ul>\n        </li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <form class=\"navbar-form navbar-left\" role=\"search\">\n          <div class=\"form-group\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Search\">\n          </div>\n        </form>\n        <li><a href=\"#\">Link</a></li>\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Action</a></li>\n            <li><a href=\"#\">Another action</a></li>\n            <li><a href=\"#\">Something else here</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">Separated link</a></li>\n          </ul>\n        </li>\n      </ul>\n    </div><!-- /.navbar-collapse -->\n  </div><!-- /.container-fluid -->\n</nav>";
+	module.exports = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <!-- Brand and toggle get grouped for better mobile display -->\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"#\">\n        <img src=\"" + __webpack_require__(133) + "\" style=\"height: 40px\"/>\n      </a>\n    </div>\n\n    <!-- Collect the nav links, forms, and other content for toggling -->\n    <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n      <ul class=\"nav navbar-nav\">\n        <li class=\"\"><a href=\"#\">Link <span class=\"sr-only\">(current)</span></a></li>\n        <li><a href=\"#\">Link</a></li>\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Action</a></li>\n            <li><a href=\"#\">Another action</a></li>\n            <li><a href=\"#\">Something else here</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">Separated link</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">One more separated link</a></li>\n          </ul>\n        </li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <form class=\"navbar-form navbar-left\" role=\"search\">\n          <div class=\"form-group\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Search\">\n          </div>\n        </form>\n        <li><a href=\"#\">Link</a></li>\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Action</a></li>\n            <li><a href=\"#\">Another action</a></li>\n            <li><a href=\"#\">Something else here</a></li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a href=\"#\">Separated link</a></li>\n          </ul>\n        </li>\n      </ul>\n    </div><!-- /.navbar-collapse -->\n  </div><!-- /.container-fluid -->\n</nav>";
 
 /***/ },
-/* 130 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "7914930e25f0482a402be11b7cb0d5e2.jpeg";
 
 /***/ },
-/* 131 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(132)
+	__webpack_require__(135)
 
 	module.exports = {
-	  template: __webpack_require__(134)
+	  template: __webpack_require__(137)
 	}
 
 /***/ },
-/* 132 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(133);
+	var content = __webpack_require__(136);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(128)(content, {});
+	var update = __webpack_require__(131)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26010,10 +26123,10 @@
 	}
 
 /***/ },
-/* 133 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(127)();
+	exports = module.exports = __webpack_require__(130)();
 	// imports
 
 
@@ -26024,7 +26137,7 @@
 
 
 /***/ },
-/* 134 */
+/* 137 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class='footer navbar-fixed-bottom'>\n  <p>Copyright © Your Website 2015</p>\n</div>";
